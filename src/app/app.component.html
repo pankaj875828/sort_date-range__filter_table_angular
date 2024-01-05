@@ -1,0 +1,79 @@
+<!-- search input -->
+
+<div class="search">
+  <form class="search-form" >
+    <input type="text"  [(ngModel)]="searchText" [ngModelOptions]="{standalone: true}" placeholder="Filter for Name, Email, Job Title and Department.">
+    <input type="submit"  value="Filter Data">
+  </form>
+</div><br>
+
+<form [formGroup]="date_range" style="margin-left: 10px;">
+  <label for="startDate">Start Date:</label>
+  <input type="date" id="startDate" [max]="today" formControlName="start_date" name="startDate"><br><br>
+
+  <label for="endDate">End Date:</label>
+  <input type="date" id="endDate" [max]='today' formControlName="end_date" name="endDate"><br><br>
+
+  <button class="ap_filter" type="submit" (click)="applyFilter()" [disabled]="!date_range.valid">Apply Filter</button>&nbsp;&nbsp;
+  <button class="reset_filter" (click)="resetFilter()" [disabled]="!date_range.valid">Reset Filter</button>
+</form>
+<br>
+
+<!-- Export dropdown start -->
+<div class="dropdown drpdn" *ngIf="employee_data != 0">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Export to
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+    <button class="dropdown-item" (click)="jsontocsv()" type="button">CSV</button>
+    <button class="dropdown-item" (click)="openPDF()" type="button">PDF</button>
+  </div>
+</div>
+<!-- Export dropdown end -->
+
+<br><br><br>
+
+<!-- data table start -->
+
+<ng-container *ngIf="( employee_data |  searchFilter : searchText) as result">
+<div class="table-responsive myclass" id="htmlData" *ngIf="result.length != 0">
+  <table class="table table-hover table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">Name <i (click)="onSortClick($event,'name')" class="my-icon fa fa-chevron-down"></i></th>
+        <th scope="col">Email <i (click)="onSortClick($event,'email')" class="my-icon fa fa-chevron-down"></i></th>
+        <th scope="col">Job Title <i (click)="onSortClick($event,'job_title')" class="my-icon fa fa-chevron-down"></i></th>
+        <th scope="col">Department <i (click)="onSortClick($event,'department')" class="my-icon fa fa-chevron-down"></i></th>
+        <th scope="col">Start Date <i (click)="onSortClick($event,'start_date')" class="my-icon fa fa-chevron-down"></i></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let emp of result">
+          <th scope="row">{{emp.name}}</th>
+          <td>{{emp.email}}</td>
+          <td>{{emp.job_title}}</td>
+          <td>{{emp.department}}</td>
+          <td>{{emp.start_date}}</td>
+        </tr>
+    </tbody>
+  </table>
+</div>
+<!-- 404 -->
+<div class="d-flex justify-content-center">
+  <h3 *ngIf="result.length == 0 || employee_data.length == 0">Data not Found</h3>
+</div>
+</ng-container>
+<!-- data table end -->
+
+<!-- scroll to top -->
+<button class="backtotop" *ngIf="windowScrolled != false" (click)="scrollToTop()">^</button>
+
+
+<!-- loader start -->
+
+<!-- <div class="container" *ngIf="loader != true">
+  <div class="ring"></div>
+  <div class="ring"></div>
+  <div class="ring"></div>
+</div> -->
+
